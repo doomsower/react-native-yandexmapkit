@@ -1,0 +1,5 @@
+rootProject.name = 'example'
+
+include ':app'
+include ':react-native-yandexmapkit'
+project(':react-native-yandexmapkit').projectDir = new File(settingsDir, '../../android')
