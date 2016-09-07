@@ -1,7 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {YandexMapView, YandexMapKit} from 'react-native-yandexmapkit';
-import { YANDEXMAPKIT_API_KEY } from 'react-native-dotenv'
+import * as YMK from 'react-native-yandexmapkit';
+import { YANDEXMAPKIT_API_KEY } from 'react-native-dotenv';
+
+console.log('Yandex', YMK);
+const { YandexMapKit, YandexMapView } = YMK;
 
 YandexMapKit.setApiKey(YANDEXMAPKIT_API_KEY);
 
