@@ -1,4 +1,10 @@
-#import "RCTViewManager.h"
+#import "YMKMapView.h"
 
-@interface RNYandexMapView : RCTViewManager
+
+@interface RNYandexMapView : YMKMapView
+
+@property (nonatomic, assign) BOOL showsUserLocation;
+@property (nonatomic, assign) BOOL showTraffic;
+@property (nonatomic, assign) BOOL nightMode;
+
 @end

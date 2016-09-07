@@ -83,6 +83,6 @@ class YandexMapView extends Component {
   }
 }
 
-const RNYandexMapView = requireNativeComponent('RNYandexMapView', YandexMapView, {nativeOnly: {onMapEvent: true, onGeocodingEvent: true}});
+const RNYandexMapView = requireNativeComponent('RNYandexMapViewManager', YandexMapView, {nativeOnly: {onMapEvent: true, onGeocodingEvent: true}});
 
 module.exports = YandexMapView;
