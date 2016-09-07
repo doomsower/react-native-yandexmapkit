@@ -1,5 +1,7 @@
 package camp.kuznetsov.rn.yandexmapkit;
 
+import android.util.Log;
+
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -85,9 +87,10 @@ public class RNYandexMapKitManager extends SimpleViewManager<RNYandexMapKitView>
 
     @ReactProp(name="region")
     public void setRegion(RNYandexMapKitView mapView, ReadableMap region){
-        GeoPoint point = new GeoPoint(region.getDouble("lat"), region.getDouble("lon"));
-        float zoom = (float) region.getDouble("zoom");
-        mapView.getMapController().setPositionNoAnimationTo(point, zoom);
+        GeoPoint point = new GeoPoint(region.getDouble("latitude"), region.getDouble("longtitude"));
+        mapView.getMapController().setPositionNoAnimationTo(point);
+        mapView.getMapController().setZoomToSpan(region.getDouble("latitudeDelta"), region.getDouble("longtitudeDelta"));
+        GeoPoint newCenter = mapView.getMapController().getMapCenter();
     }
 
     @Nullable

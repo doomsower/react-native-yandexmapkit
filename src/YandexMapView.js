@@ -16,14 +16,16 @@ class YandexMapView extends Component {
     nightMode: PropTypes.bool,
     geocodingEnabled: PropTypes.bool,
     region: PropTypes.shape({
-      lat: PropTypes.number,
-      lon: PropTypes.number,
-      zoom: PropTypes.number
+      latitude: PropTypes.number,
+      longitude: PropTypes.number,
+      latitudeDelta: PropTypes.number,
+      longitudeDelta: PropTypes.number,
     }),
     inititalRegion: PropTypes.shape({
-      lat: PropTypes.number,
-      lon: PropTypes.number,
-      zoom: PropTypes.number
+      latitude: PropTypes.number,
+      longitude: PropTypes.number,
+      latitudeDelta: PropTypes.number,
+      longitudeDelta: PropTypes.number,
     }),
     onInteraction: PropTypes.func, 
     onGeocoding: PropTypes.func, 
@@ -46,9 +48,10 @@ class YandexMapView extends Component {
     if (!this._prevRegion || !nextProps.region) 
       return;
     if (
-      this._prevRegion.lat  !== nextProps.region.lat ||
-      this._prevRegion.lon  !== nextProps.region.lon ||
-      this._prevRegion.zoom !== nextProps.region.zoom
+      this._prevRegion.latitude  !== nextProps.region.latitude ||
+      this._prevRegion.longitude  !== nextProps.region.longitude ||
+      this._prevRegion.latitudeDelta !== nextProps.region.latitudeDelta ||
+      this._prevRegion.longitudeDelta !== nextProps.region.longitudeDelta
     ) {
       this._map.setNativeProps({ region: nextProps.region });
     }
@@ -66,8 +69,8 @@ class YandexMapView extends Component {
   }
 
   onMapEventInternal = (event) => {
-    const {lat, lon, zoom, type} = event.nativeEvent;
-    this._prevRegion = {lat, lon, zoom};
+    const {latitude, longitude, latitudeDelta, longitudeDelta, type} = event.nativeEvent;
+    this._prevRegion = {latitude, longitude, latitudeDelta, longitudeDelta};
     if (this.props.onInteraction){
       this.props.onInteraction(event.nativeEvent);
     }

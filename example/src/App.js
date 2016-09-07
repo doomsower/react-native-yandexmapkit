@@ -3,7 +3,6 @@ import {View, Text, StyleSheet} from 'react-native';
 import * as YMK from 'react-native-yandexmapkit';
 import { YANDEXMAPKIT_API_KEY } from 'react-native-dotenv';
 
-console.log('Yandex', YMK);
 const { YandexMapKit, YandexMapView } = YMK;
 
 YandexMapKit.setApiKey(YANDEXMAPKIT_API_KEY);
@@ -12,30 +11,32 @@ export default class App extends Component {
 
   state = {
     region: {
-      lat: 59.939095,
-      lon: 30.315868,
-      zoom: 12,
+      latitude: 59.950979336181184,
+      longtitude: 30.33594348018638,
+      latitudeDelta: 0.09764120700999257,
+      longtitudeDelta: 0.1235961914638466,
     },
     address: ''
   };
 
   render() {
-    const {lat, lon, zoom} = this.state.region;
+    const {latitude, longtitude, latitudeDelta, longtitudeDelta} = this.state.region;
     return (
       <View style={styles.container}>
         <YandexMapView style={styles.container} onInteraction={this.onInteraction} region={this.state.region}
                        showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}/>
         <View style={styles.overlay}>
-          <Text>{`${lat.toPrecision(4)} - ${lon.toPrecision(4)} - ${zoom.toPrecision(2)} - ${this.state.address}`}</Text>
+          <Text>{`${latitude.toPrecision(4)} - ${longtitude.toPrecision(4)} (${latitudeDelta.toPrecision(4)} - ${longtitudeDelta.toPrecision(4)})`}</Text>
+          <Text>{this.state.address}</Text>
         </View>
       </View>
     );
   }
 
   onInteraction = (event) => {
-    const {lat, lon, zoom, type} = event;
-    console.log('Interaction', lat, lon, zoom, type);
-    this.setState({region: {lat, lon, zoom}});
+    const {latitude, longtitude, latitudeDelta, longtitudeDelta, type} = event;
+    console.log('Interaction', latitude, longtitude, latitudeDelta, longtitudeDelta, type);
+    this.setState({region: {latitude, longtitude, latitudeDelta, longtitudeDelta}});
   };
 
   onGeocoding = (event) => {
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     bottom: 16,
-    height: 32,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,0.75)',
