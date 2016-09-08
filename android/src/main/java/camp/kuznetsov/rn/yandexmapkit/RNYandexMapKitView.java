@@ -57,9 +57,9 @@ public class RNYandexMapKitView extends MapView implements OnMapListener, GeoCod
         WritableMap payload = Arguments.createMap();
         payload.putInt("type", msg);
         payload.putDouble("latitude",  mapCenter.getLat());
-        payload.putDouble("longtitude", mapCenter.getLon());
+        payload.putDouble("longitude", mapCenter.getLon());
         payload.putDouble("latitudeDelta", latDelta);
-        payload.putDouble("longtitudeDelta", lonDelta);
+        payload.putDouble("longitudeDelta", lonDelta);
         ReactContext reactContext = (ReactContext) getContext();
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(this.getId(), MAP_EVENT, payload);
 
@@ -80,7 +80,7 @@ public class RNYandexMapKitView extends MapView implements OnMapListener, GeoCod
             WritableMap point = Arguments.createMap();
             GeoPoint geoPoint = geoCode.getGeoPoint();
             point.putDouble("latitude", geoPoint.getLat());
-            point.putDouble("longtitude", geoPoint.getLon());
+            point.putDouble("longitude", geoPoint.getLon());
             payload.putMap("point", point);
 
             ReactContext reactContext = (ReactContext) getContext();

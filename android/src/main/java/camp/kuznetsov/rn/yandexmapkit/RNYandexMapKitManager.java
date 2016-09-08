@@ -87,9 +87,9 @@ public class RNYandexMapKitManager extends SimpleViewManager<RNYandexMapKitView>
 
     @ReactProp(name="region")
     public void setRegion(RNYandexMapKitView mapView, ReadableMap region){
-        GeoPoint point = new GeoPoint(region.getDouble("latitude"), region.getDouble("longtitude"));
+        GeoPoint point = new GeoPoint(region.getDouble("latitude"), region.getDouble("longitude"));
         mapView.getMapController().setPositionNoAnimationTo(point);
-        mapView.getMapController().setZoomToSpan(region.getDouble("latitudeDelta"), region.getDouble("longtitudeDelta"));
+        mapView.getMapController().setZoomToSpan(region.getDouble("latitudeDelta"), region.getDouble("longitudeDelta"));
         GeoPoint newCenter = mapView.getMapController().getMapCenter();
     }
 
