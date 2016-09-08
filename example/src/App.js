@@ -24,8 +24,7 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <YandexMapView ref="yandexMap" style={styles.container} onInteraction={this.onInteraction} region={this.state.region}
-                       showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}
-                       showTraffic={false}/>
+                       showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}/>
         <View style={styles.buttonOverlay}>
           <TouchableOpacity onPress={this.resetRegion} style={styles.button}>
             <Text>Reset region</Text>

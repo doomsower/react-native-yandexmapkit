@@ -1,7 +1,6 @@
 package camp.kuznetsov.rn.yandexmapkit;
 
-import android.util.Log;
-
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -16,6 +15,8 @@ import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 public class RNYandexMapKitManager extends SimpleViewManager<RNYandexMapKitView> {
     public static final String REACT_CLASS = "RNYandexMapView";
+
+    private static final int ANIMATE_TO_COORDINATE = 1;
 
     @Override
     public String getName() {
@@ -100,6 +101,31 @@ public class RNYandexMapKitManager extends SimpleViewManager<RNYandexMapKitView>
         builder.put(RNYandexMapKitView.MAP_EVENT,       MapBuilder.of("registrationName", RNYandexMapKitView.MAP_EVENT));
         builder.put(RNYandexMapKitView.GEOCODING_EVENT, MapBuilder.of("registrationName", RNYandexMapKitView.GEOCODING_EVENT));
         return builder.build();
+    }
+
+
+    @Override
+    @Nullable
+    public Map<String, Integer> getCommandsMap() {
+        return MapBuilder.of(
+            "animateToCoordinate", ANIMATE_TO_COORDINATE
+        );
+    }
+
+    @Override
+    public void receiveCommand(RNYandexMapKitView view, int commandId, @Nullable ReadableArray args) {
+        switch (commandId) {
+            case ANIMATE_TO_COORDINATE:
+                GeoPoint coordinate = null;
+                ReadableMap latlon = args.getMap(0);
+                if (latlon != null){
+                    double latitude = latlon.getDouble("latitude");
+                    double longitude = latlon.getDouble("longitude");
+                    coordinate = new GeoPoint(latitude, longitude);
+                }
+                view.animateToCoordinate(coordinate);
+                break;
+        }
     }
 
 }

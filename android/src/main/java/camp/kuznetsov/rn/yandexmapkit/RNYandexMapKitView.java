@@ -3,12 +3,13 @@ package camp.kuznetsov.rn.yandexmapkit;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+
+import javax.annotation.Nullable;
 
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
@@ -16,6 +17,8 @@ import ru.yandex.yandexmapkit.map.GeoCode;
 import ru.yandex.yandexmapkit.map.GeoCodeListener;
 import ru.yandex.yandexmapkit.map.MapEvent;
 import ru.yandex.yandexmapkit.map.OnMapListener;
+import ru.yandex.yandexmapkit.overlay.location.MyLocationItem;
+import ru.yandex.yandexmapkit.overlay.location.MyLocationOverlay;
 import ru.yandex.yandexmapkit.utils.GeoPoint;
 import ru.yandex.yandexmapkit.utils.ScreenPoint;
 
@@ -87,5 +90,18 @@ public class RNYandexMapKitView extends MapView implements OnMapListener, GeoCod
             reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(this.getId(), GEOCODING_EVENT, payload);
         }
         return true;
+    }
+
+    public void animateToCoordinate(@Nullable GeoPoint coordinate){
+        MapController controller = getMapController();
+        if (coordinate == null){
+            MyLocationItem myLocation = controller.getOverlayManager().getMyLocation().getMyLocationItem();
+            if (myLocation != null){
+                controller.setPositionAnimationTo(myLocation.getGeoPoint());
+            }
+        }
+        else {
+            controller.setPositionAnimationTo(coordinate);
+        }
     }
 }

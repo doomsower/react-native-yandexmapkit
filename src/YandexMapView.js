@@ -4,17 +4,23 @@ import { requireNativeComponent, findNodeHandle, View, NativeModules, Platform }
 class YandexMapView extends Component {
 
   static propTypes = {
+    //Android-only props
+
     showBuiltInScreenButtons: PropTypes.bool,
     showFindMeButton: PropTypes.bool,
     showJamsButton: PropTypes.bool,
     showScaleView: PropTypes.bool,
     showZoomButtons: PropTypes.bool,
-    showMyLocation: PropTypes.bool,
     interactive: PropTypes.bool,
     hdMode: PropTypes.bool,
+    
+    //Cross-platform props
+
     showTraffic: PropTypes.bool,
+    showMyLocation: PropTypes.bool,
     nightMode: PropTypes.bool,
     geocodingEnabled: PropTypes.bool,
+
     region: PropTypes.shape({
       latitude: PropTypes.number,
       longitude: PropTypes.number,
@@ -30,6 +36,21 @@ class YandexMapView extends Component {
     onInteraction: PropTypes.func, 
     onGeocoding: PropTypes.func, 
     ...View.propTypes 
+  };
+
+  static defaultProps = {
+    showBuiltInScreenButtons: false,
+    showFindMeButton: false,
+    showJamsButton: false,
+    showScaleView: false,
+    showZoomButtons: false,
+    interactive: true,
+    hdMode: false,
+
+    showTraffic: false,
+    showMyLocation: false,
+    nightMode: false,
+    geocodingEnabled: false,
   };
 
   _prevRegion = null;
@@ -87,7 +108,7 @@ class YandexMapView extends Component {
       case 'android':
         NativeModules.UIManager.dispatchViewManagerCommand(
           findNodeHandle(this._map),
-          NativeModules.UIManager.RNYandexMapViewManager.Commands[name],
+          NativeModules.UIManager.RNYandexMapView.Commands[name],
           args
         );
         break;
