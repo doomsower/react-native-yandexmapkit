@@ -23,13 +23,9 @@ export default class App extends Component {
     const {latitude, longitude, latitudeDelta, longitudeDelta} = this.state.region;
     return (
       <View style={styles.container}>
-        <YandexMapView ref="yandexMap" style={styles.container} onInteraction={this.onInteraction} region={this.state.region}
-                       showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}/>
-        <View style={styles.buttonOverlay}>
-          <TouchableOpacity onPress={this.resetRegion} style={styles.button}>
-            <Text>Reset region</Text>
-          </TouchableOpacity>
-        </View>  
+        <YandexMapView ref="yandexMap" onInteraction={this.onInteraction} region={this.state.region}
+                       showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}
+                       showMyLocationButton={true}/>
         <View style={styles.info}>
           <Text>{`${latitude.toPrecision(4)} - ${longitude.toPrecision(4)} (${latitudeDelta.toPrecision(4)} - ${longitudeDelta.toPrecision(4)})`}</Text>
           <Text>{this.state.address}</Text>

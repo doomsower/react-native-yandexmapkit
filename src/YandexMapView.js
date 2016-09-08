@@ -1,9 +1,23 @@
 import React, {Component, PropTypes} from 'react';
-import { requireNativeComponent, findNodeHandle, View, NativeModules, Platform } from 'react-native'; 
+import { 
+  requireNativeComponent, 
+  findNodeHandle, 
+  NativeModules, 
+  View, 
+  StyleSheet, 
+  Platform,
+  Image,
+  TouchableOpacity } from 'react-native'; 
 
 class YandexMapView extends Component {
 
   static propTypes = {
+    //React-native UI props
+
+    showMyLocationButton: PropTypes.bool,
+    myLocationButtonPosition: PropTypes.any,
+    renderMyLocationButton: PropTypes.func,
+
     //Android-only props
 
     showBuiltInScreenButtons: PropTypes.bool,
@@ -65,14 +79,34 @@ class YandexMapView extends Component {
 
   render() {
     //Omit region and set it via setNativeProps
-    const {region, inititalRegion, ...rest} = this.props;
+    const {region, inititalRegion, style, showMyLocationButton, renderMyLocationButton, myLocationButtonPosition, ...rest} = this.props;
     return (
-      <RNYandexMapView ref={map => {this._map = map}} {...rest} 
-                       onMapEvent={this.onMapEventInternal}
-                       onGeocodingEvent={this.onGeocodingEventInternal}
-                       />
+      <View style={[styles.container, style]}>
+        <RNYandexMapView ref={map => {this._map = map}} 
+                        {...rest} 
+                        style={styles.container}
+                        onMapEvent={this.onMapEventInternal}
+                        onGeocodingEvent={this.onGeocodingEventInternal}
+                        />
+        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+          { this.renderMyLocationButton() }
+        </View>
+      </View>
     );
   }
+
+  renderMyLocationButton = () => {
+    const {showMyLocationButton, renderMyLocationButton, myLocationButtonPosition, ...rest} = this.props;
+        const renderLocatioButton = renderMyLocationButton ? renderMyLocationButton : this.renderDefaultMyLocationButton;
+    const locationWrapperStyle = myLocationButtonPosition ? myLocationButtonPosition : styles.button;
+    if (!showMyLocationButton)
+      return null;
+    return (
+      <View style={locationWrapperStyle}>
+        {renderLocatioButton()}
+      </View>
+    );
+  };
 
   onMapEventInternal = (event) => {
     const {latitude, longitude, latitudeDelta, longitudeDelta, type} = event.nativeEvent;
@@ -110,10 +144,50 @@ class YandexMapView extends Component {
     }
   };
 
+  /**
+   * Animates to given {latitude,longitude}, or to user's location, if coordinate is undefined
+   */
   animateToCoordinate = (coordinate) => {
     this.runCommand('animateToCoordinate', [coordinate]);
   };
+
+  renderDefaultMyLocationButton = () => {
+    return (
+      <TouchableOpacity onPress={() => this.animateToCoordinate()}>
+        <View style={styles.iconWrapper}>
+          <Image source={require('./assets/my_location.png')}/>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  iconWrapper: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(220,220,220,0.75)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  button: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
+});
 
 const RNYandexMapView = requireNativeComponent('RNYandexMapView', YandexMapView, {nativeOnly: {onMapEvent: true, onGeocodingEvent: true}});
 
