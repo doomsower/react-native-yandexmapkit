@@ -23,7 +23,7 @@ export default class App extends Component {
     const {latitude, longitude, latitudeDelta, longitudeDelta} = this.state.region;
     return (
       <View style={styles.container}>
-        <YandexMapView style={styles.container} onInteraction={this.onInteraction} region={this.state.region}
+        <YandexMapView ref="yandexMap" style={styles.container} onInteraction={this.onInteraction} region={this.state.region}
                        showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}
                        showTraffic={false}/>
         <View style={styles.buttonOverlay}>
@@ -51,14 +51,7 @@ export default class App extends Component {
   };
 
   resetRegion = () => {
-    this.setState({
-      region: {
-       latitude: 59.950979336181184,
-       longitude: 30.33594348018638,
-        latitudeDelta: 0.09764120700999257,
-        longitudeDelta: 0.1235961914638466,
-      },
-    })
+    this.refs['yandexMap'].animateToCoordinate();
   };
 }
 

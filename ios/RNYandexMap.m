@@ -77,6 +77,14 @@
   }
 }
 
+- (YMKUserLocation *)userLocation {
+  return mapView.userLocation;
+}
+
+
+- (void)setCenterCoordinate:(YMKMapCoordinate)coordinate animated:(BOOL)animated {
+  [mapView setCenterCoordinate:coordinate animated:animated];
+}
 
 - (void)mapView:(YMKMapView *)yMapView regionDidChangeAnimated:(BOOL)animated {
   if (_onMapEvent && self.frame.size.width > 0){

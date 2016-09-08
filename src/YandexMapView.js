@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import { requireNativeComponent, View } from 'react-native'; 
+import { requireNativeComponent, findNodeHandle, View, NativeModules, Platform } from 'react-native'; 
 
 class YandexMapView extends Component {
 
@@ -80,7 +80,33 @@ class YandexMapView extends Component {
     if (this.props.onGeocoding){
       this.props.onGeocoding(event.nativeEvent);
     }
-  }
+  };
+
+  runCommand = (name, args) => {
+    switch (Platform.OS) {
+      case 'android':
+        NativeModules.UIManager.dispatchViewManagerCommand(
+          findNodeHandle(this._map),
+          NativeModules.UIManager.RNYandexMapViewManager.Commands[name],
+          args
+        );
+        break;
+
+      case 'ios':
+        NativeModules.RNYandexMapViewManager[name].apply(
+          NativeModules.RNYandexMapViewManager[name],
+          [findNodeHandle(this._map), ...args]
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  animateToCoordinate = (coordinate) => {
+    this.runCommand('animateToCoordinate', [coordinate]);
+  };
 }
 
 const RNYandexMapView = requireNativeComponent('RNYandexMapView', YandexMapView, {nativeOnly: {onMapEvent: true, onGeocodingEvent: true}});
