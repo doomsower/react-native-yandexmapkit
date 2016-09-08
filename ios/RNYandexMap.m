@@ -14,6 +14,7 @@
   if (self) {
     mapView = [[YMKMapView alloc] init];
     mapView.delegate = self;
+    mapView.showTraffic = NO;
     mapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:mapView];
   }
