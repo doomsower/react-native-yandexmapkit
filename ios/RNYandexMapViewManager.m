@@ -1,6 +1,7 @@
 #import "RNYandexMapViewManager.h"
 #import "YMKMapView.h"
 #import "RCTConvert+YMKMapStructs.h"
+#import "RNYandexMap.h"
 
 @implementation RNYandexMapViewManager
 
@@ -9,15 +10,29 @@ RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 
 - (UIView *)view {
-  return [[YMKMapView alloc] init];
+  return [[RNYandexMap alloc] init];
 }
 
-RCT_REMAP_VIEW_PROPERTY(showMyLocation, showsUserLocation, BOOL)
+- (NSArray *) customDirectEventTypes
+{
+  return @[
+      @"onMapEvent"
+  ];
+}
+
+- (dispatch_queue_t)methodQueue
+{
+  return dispatch_get_main_queue();
+}
+
+RCT_EXPORT_VIEW_PROPERTY(showMyLocation, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(showTraffic, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(nightMode, BOOL)
-RCT_CUSTOM_VIEW_PROPERTY(region, YMKMapRegion, YMKMapView) {
+RCT_CUSTOM_VIEW_PROPERTY(region, YMKMapRegion, RNYandexMap) {
   [view setRegion:json ? [RCTConvert YMKMapRegion:json] : defaultView.region animated:NO];
 }
+
+RCT_EXPORT_VIEW_PROPERTY(onMapEvent, RCTDirectEventBlock)
 
 @end
 

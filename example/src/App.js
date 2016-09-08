@@ -53,8 +53,8 @@ export default class App extends Component {
   resetRegion = () => {
     this.setState({
       region: {
-        latitude: 29.950979336181184,
-        longitude: 20.33594348018638,
+       latitude: 59.950979336181184,
+       longitude: 30.33594348018638,
         latitudeDelta: 0.09764120700999257,
         longitudeDelta: 0.1235961914638466,
       },
