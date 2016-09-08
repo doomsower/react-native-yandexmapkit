@@ -38,21 +38,6 @@ class YandexMapView extends Component {
     ...View.propTypes 
   };
 
-  static defaultProps = {
-    showBuiltInScreenButtons: false,
-    showFindMeButton: false,
-    showJamsButton: false,
-    showScaleView: false,
-    showZoomButtons: false,
-    interactive: true,
-    hdMode: false,
-
-    showTraffic: false,
-    showMyLocation: false,
-    nightMode: false,
-    geocodingEnabled: false,
-  };
-
   _prevRegion = null;
   _map = null;
 
