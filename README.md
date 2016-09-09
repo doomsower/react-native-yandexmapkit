@@ -4,14 +4,16 @@
 This is a wrapper around Yandex Map Kit for [iOS](https://github.com/yandexmobile/yandexmapkit-ios) and [Android](https://github.com/yandexmobile/yandexmapkit-android).
 
 Since original projects are in deep coma, here I only support features that I needed for my other projects. If you need markers, callouts or polygons, I suggest you use [react-native-maps](https://github.com/lelandrichardson/react-native-maps).
-However, if you must use yandex map kit in your react-native projects and you need any of these features, I encourage you to contribute. Just be sure to check out both of the original SDKs before you implement anything, because they are quite different! 
+However, if you must use yandex map kit in your react-native projects and you need any of these features, I encourage you to contribute. Just be sure to check out both of the original SDKs before you implement anything, because they are quite different!
+
+Note that Android version might not work properly on emulators, which results in map tiles not being rendered. 
 
 ![Android](https://raw.githubusercontent.com/doomsower/react-native-yandexmapkit/master/images/rn-ymk-android.gif)
 ![iOS](https://raw.githubusercontent.com/doomsower/react-native-yandexmapkit/master/images/rn-ymk-ios.gif)
 
 ## Installation
 
-`$ npm install react-native-yandex-map-kit --save`
+`$ npm install react-native-yandexmapkit --save`
 
 ### Android
 
@@ -77,6 +79,9 @@ Add this line
 | `disableAndroidGeocoding` | `Boolean` | `false` | If `true`, all reverse geocoding requests will be sent from JS. Otherwise, Android will use its own implementation.
 | `geocodingApiKey` | `String` | | Yandex Maps API key to be used in geocoding requests, can be obtained [here](https://developer.tech.yandex.ru/). This key is different from Yande Map KIt API key.
 | `geocodingOptions` | `Object` | {<br/>sco: 'latlong',<br/>kind: 'house'<br/>} | Reverse geocoding request [parameters](https://tech.yandex.ru/maps/doc/geocoder/desc/concepts/input_params-docpage/)
+| `showMyLocationButton` | `Boolean` | `false` | If `true`, renders show my location button in top-right corner of the map
+| `myLocationButtonPosition` | `Style` | { position: 'absolute', top: 16, right: 16, } | Style used to position container view with 'show my location' button inside it
+| `renderMyLocationButton` | `Function` | | Use this to render custom 'show my location' button
 
 #### Android-only props
 
