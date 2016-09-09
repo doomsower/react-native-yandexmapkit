@@ -11,8 +11,8 @@ export default class App extends Component {
 
   state = {
     region: {
-      latitude: 59.950979336181184,
-      longitude: 30.33594348018638,
+      latitude: 59.947212,
+      longitude: 30.336098,
       latitudeDelta: 0.09764120700999257,
       longitudeDelta: 0.1235961914638466,
     },
@@ -25,7 +25,7 @@ export default class App extends Component {
       <View style={styles.container}>
         <YandexMapView ref="yandexMap" onInteraction={this.onInteraction} region={this.state.region}
                        showMyLocation={true} geocodingEnabled={true} onGeocoding={this.onGeocoding}
-                       showMyLocationButton={true}/>
+                       showMyLocationButton={true} disableAndroidGeocoding={false}/>
         <View style={styles.info}>
           <Text>{`${latitude.toPrecision(4)} - ${longitude.toPrecision(4)} (${latitudeDelta.toPrecision(4)} - ${longitudeDelta.toPrecision(4)})`}</Text>
           <Text>{this.state.address}</Text>
@@ -40,9 +40,9 @@ export default class App extends Component {
     this.setState({region: {latitude, longitude, latitudeDelta, longitudeDelta}});
   };
 
-  onGeocoding = (event) => {
-    console.log('Geocoding response:', event);
-    this.setState({address: event.displayName});
+  onGeocoding = (short, full) => {
+    console.log('Geocoding response:', short, full);
+    this.setState({address: short.displayName});
   };
 
   resetRegion = () => {

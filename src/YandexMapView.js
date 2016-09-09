@@ -8,6 +8,8 @@ import {
   Platform,
   Image,
   TouchableOpacity } from 'react-native'; 
+import {requestGeocoding} from './YandexGeocoding';
+import debounce from 'lodash/debounce';
 
 class YandexMapView extends Component {
 
@@ -27,13 +29,18 @@ class YandexMapView extends Component {
     showZoomButtons: PropTypes.bool,
     interactive: PropTypes.bool,
     hdMode: PropTypes.bool,
+
+    //Geocoding
+    geocodingEnabled: PropTypes.bool,
+    geocodingOptions: PropTypes.object,
+    geocodingApiKey: PropTypes.string,
+    disableAndroidGeocoding: PropTypes.bool,
     
     //Cross-platform props
 
     showTraffic: PropTypes.bool,
     showMyLocation: PropTypes.bool,
     nightMode: PropTypes.bool,
-    geocodingEnabled: PropTypes.bool,
 
     region: PropTypes.shape({
       latitude: PropTypes.number,
@@ -52,8 +59,16 @@ class YandexMapView extends Component {
     ...View.propTypes 
   };
 
+  static defaultProps = {
+    geocodingOptions: {
+      sco: 'latlong',
+      kind: 'house',
+    },
+  };
+
   _prevRegion = null;
   _map = null;
+  _debouncedGeocoding = null;
 
   componentDidMount() {
     const { region, inititalRegion } = this.props;
@@ -61,6 +76,14 @@ class YandexMapView extends Component {
       this._map.setNativeProps({ region });
     } else if (inititalRegion) {
       this._map.setNativeProps({ region: inititalRegion });
+    }
+    const {geocodingOptions, geocodingApiKey} = this.props;
+    this._debouncedGeocoding = this.createDebouncedGeocoding(geocodingOptions, geocodingApiKey);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.geocodingApiKey != this.props.geocodingApiKey || nextProps.geocodingOptions != this.props.geocodingOptions){
+      this._debouncedGeocoding = this.createDebouncedGeocoding(nextProps.geocodingOptions, nextProps.geocodingApiKey);
     }
   }
 
@@ -77,15 +100,23 @@ class YandexMapView extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this._debouncedGeocoding){
+      this._debouncedGeocoding.cancel();
+    }
+  }
+
   render() {
     //Omit region and set it via setNativeProps
-    const {region, inititalRegion, style, showMyLocationButton, renderMyLocationButton, myLocationButtonPosition, ...rest} = this.props;
+    const {region, inititalRegion, style, showMyLocationButton, renderMyLocationButton, myLocationButtonPosition, geocodingEnabled, disableAndroidGeocoding, ...rest} = this.props;
+    const gcEnabled = geocodingEnabled && (Platform.OS === 'ios' || !disableAndroidGeocoding);
     return (
       <View style={[styles.container, style]}>
         <RNYandexMapView ref={map => {this._map = map}} 
                         {...rest} 
                         style={styles.container}
                         onMapEvent={this.onMapEventInternal}
+                        geocodingEnabled={gcEnabled}
                         onGeocodingEvent={this.onGeocodingEventInternal}
                         />
         <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
@@ -114,7 +145,50 @@ class YandexMapView extends Component {
     if (this.props.onInteraction){
       this.props.onInteraction(event.nativeEvent);
     }
+    
+    //Handle geocoding
+    const {geocodingEnabled, disableAndroidGeocoding} = this.props;
+    if (geocodingEnabled && (Platform.OS === 'ios' || disableAndroidGeocoding)){
+      this._debouncedGeocoding(latitude, longitude);
+    }
   };
+
+  createDebouncedGeocoding = (options, apiKey) => {
+    return debounce(
+      (latitude, longitude) => {
+        requestGeocoding(`${latitude},${longitude}`, options, apiKey)
+          .then( json => {
+            if (json.error){
+              consle.warn('Yandex geocoding api error: ' + json.error);
+            }
+            else if (this.props.onGeocoding){
+              //Provide full web geocoding response as second argument
+              //First argument is extracted from the response to match Android native geocoding response
+              const {featureMember: [firstFound, ...rest]} = json.response.GeoObjectCollection;
+              if (firstFound){
+                const [lon, lat] = firstFound.GeoObject.Point.pos.split(' ');
+                const title = firstFound.GeoObject.name;
+                const subtitle = firstFound.GeoObject.description;
+                const kind = firstFound.GeoObject.metaDataProperty.GeocoderMetaData.kind;
+                const androidCompatibleResult = {
+                  displayName: subtitle + ', ' + title,
+                  kind,
+                  title,
+                  subtitle,
+                  point: {
+                    latitude: lat,
+                    longitude: lon,
+                  },
+                };
+                this.props.onGeocoding(androidCompatibleResult, json);
+              }
+            }
+          })
+          .catch( error => consle.warn('Yandex geocoding api error: ' + error));
+      },
+      150
+    );
+  }
 
   onGeocodingEventInternal = (event) => {
     if (this.props.onGeocoding){
@@ -170,7 +244,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(220,220,220,0.75)',
+    backgroundColor: 'rgb(220,220,220)',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
