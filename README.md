@@ -14,6 +14,7 @@ However, if you must use yandex map kit in your react-native projects and you ne
 
 1. Run `react-native link`
 2. Add following permissions to your `android/app/src/AndroidManifest.xml`:
+    
     ```xml
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -33,7 +34,7 @@ However, if you must use yandex map kit in your react-native projects and you ne
 Add this line  
 
     ```ruby
-    pod 'react-native-yandexmapkit', :path => '../node_modules/react-yandexmapkit'
+    pod 'react-native-yandexmapkit', :path => '../node_modules/react-native-yandexmapkit'
     ```
     to your Podfile (you may need to adjust path if you have non-standard project structure).
 		And then run `pod install` (if you’re setting up Cocoapods for the first time) or `pod update` (if you’re adding MoPub to an existing CocoaPods project).
