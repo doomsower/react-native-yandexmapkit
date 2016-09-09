@@ -101,3 +101,5 @@ The component exposes some Android-only props that control map UI:
 ## Example
 
 You can find it [here](https://github.com/doomsower/react-native-yandexmapkit/tree/master/example)
+
+You'll need to create `.env.development` property file in `example` dir and put your `YANDEXMAPKIT_API_KEY` in it.
