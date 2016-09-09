@@ -31,6 +31,16 @@ Note that Android version might not work properly on emulators, which results in
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     ```
+3. Add yandexmapkit-android repo to your `android/build.gradle`:
+
+    ```gradle
+    allprojects {
+      repositories {
+          ...
+          maven { url 'https://github.com/yandexmobile/yandexmapkit-android/raw/maven/' }
+      }
+    }
+    ```
 
 ### iOS
 
