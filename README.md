@@ -89,7 +89,9 @@ The component exposes some Android-only props that control map UI:
 
 | Event Name | Returns | Notes
 |---|---|---|
-| `onInteraction` | `{latitude, longitude, latitudeDelta, longitudeDelta, type}` | Fired when user interacts with map. <br/>On **Android**, interaction type is returned in type attribute, list of types can be found [here](https://cdn.rawgit.com/yandexmobile/yandexmapkit-android/master/yandexmapkit-library/doc/ru/yandex/yandexmapkit/map/MapEvent.html) <br/> On **iOS**, this event is fired only at the end of interaction.
+| `onInteraction` | `{latitude, longitude, latitudeDelta, longitudeDelta, type}` | Fired when user interacts with map.
+|   |   | On **Android**, interaction type is returned in type attribute, list of types can be found [here](https://cdn.rawgit.com/yandexmobile/yandexmapkit-android/master/yandexmapkit-library/doc/ru/yandex/yandexmapkit/map/MapEvent.html)
+|   |   | On **iOS**, this event is fired only at the end of interaction.
 | `onGeocoding` | Objects | Takes two arguments: the first one is in native Android format, the second one is full response from web service.
 
 #### Methods
