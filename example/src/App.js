@@ -40,7 +40,9 @@ export default class App extends Component {
 
   onGeocoding = (short, full) => {
     console.log('Geocoding response:', short, full);
-    this.setState({address: short.displayName});
+    if (short){
+      this.setState({address: short.displayName});
+    }
   };
 
   resetRegion = () => {

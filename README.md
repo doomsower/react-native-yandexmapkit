@@ -119,6 +119,15 @@ The component exposes some Android-only props that control map UI:
 |---|---|---|
 | `animateToCoordinate` | `PropTypes.shape({latitude: PropTypes.number, longitude: PropTypes.number})` | Animates map to given coordinate, or to user's current position if argument is undefined.
 
+### YandexMapKit API
+
+| Method Name | Arguments | Notes
+|---|---|---|
+| `setApiKey` | String | Sets Yandex Map Kit API key for all map views you use. Call this before you mount your first map view. 
+| `requestGeocoding` | geocode: string, **Required**<br/>options: object,<br/>apikey: string | Helper method to call [Yandex Geocoder](https://tech.yandex.ru/maps/doc/geocoder/desc/concepts/input_params-docpage/), takes three arguments:<br/> **geocode** - queried address string or coordinate,<br/>**options** -well, options<br/>**apikey** - Yandex Maps API key for geocoding requests, this is different from Yandex Map Kit key<br/>Returns Promise which resolves with json 
+| `makeDebouncedGeocoding` | options: object <br/> onComplete: function<br/> apiKey: string <br/> debounceWait: number | Convenience method to make Yandex Geocoder requests.<br/>**options** - geocoder request options<br/>**onComplete** - will be called with geocoder two arguments - first match in Android format, and full response<br/>**apiKey** - same as for *requestGeocoding*<br/>**debounceWait** - debouncing interval, defaults to 150 ms<br/><br/>Depending on **options** returns function that takes one argument - address, or two arguments - latitude and longitude (for reverse geocoding).
+
+
 ## Example
 
 You can find it [here](https://github.com/doomsower/react-native-yandexmapkit/tree/master/example)

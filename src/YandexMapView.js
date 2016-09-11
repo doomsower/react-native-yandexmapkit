@@ -8,8 +8,7 @@ import {
   Platform,
   Image,
   TouchableOpacity } from 'react-native'; 
-import {requestGeocoding} from './YandexGeocoding';
-import debounce from 'lodash/debounce';
+import {makeDebouncedGeocoding} from './YandexMapKit';
 
 class YandexMapView extends Component {
 
@@ -77,13 +76,17 @@ class YandexMapView extends Component {
     } else if (inititalRegion) {
       this._map.setNativeProps({ region: inititalRegion });
     }
-    const {geocodingOptions, geocodingApiKey} = this.props;
-    this._debouncedGeocoding = this.createDebouncedGeocoding(geocodingOptions, geocodingApiKey);
+    const {geocodingOptions, geocodingApiKey, onGeocoding} = this.props;
+    this._debouncedGeocoding = makeDebouncedGeocoding(geocodingOptions, onGeocoding, geocodingApiKey);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.geocodingApiKey != this.props.geocodingApiKey || nextProps.geocodingOptions != this.props.geocodingOptions){
-      this._debouncedGeocoding = this.createDebouncedGeocoding(nextProps.geocodingOptions, nextProps.geocodingApiKey);
+    if (
+      nextProps.geocodingApiKey != this.props.geocodingApiKey || 
+      nextProps.geocodingOptions != this.props.geocodingOptions ||
+      nextProps.onGeocoding != this.props.onGeocoding
+    ){
+      this._debouncedGeocoding = this.createDebouncedGeocoding(nextProps.geocodingOptions, nextProps.onGeocoding, nextProps.geocodingApiKey);
     }
   }
 
@@ -152,43 +155,6 @@ class YandexMapView extends Component {
       this._debouncedGeocoding(latitude, longitude);
     }
   };
-
-  createDebouncedGeocoding = (options, apiKey) => {
-    return debounce(
-      (latitude, longitude) => {
-        requestGeocoding(`${latitude},${longitude}`, options, apiKey)
-          .then( json => {
-            if (json.error){
-              consle.warn('Yandex geocoding api error: ' + json.error);
-            }
-            else if (this.props.onGeocoding){
-              //Provide full web geocoding response as second argument
-              //First argument is extracted from the response to match Android native geocoding response
-              const {featureMember: [firstFound, ...rest]} = json.response.GeoObjectCollection;
-              if (firstFound){
-                const [lon, lat] = firstFound.GeoObject.Point.pos.split(' ');
-                const title = firstFound.GeoObject.name;
-                const subtitle = firstFound.GeoObject.description;
-                const kind = firstFound.GeoObject.metaDataProperty.GeocoderMetaData.kind;
-                const androidCompatibleResult = {
-                  displayName: subtitle + ', ' + title,
-                  kind,
-                  title,
-                  subtitle,
-                  point: {
-                    latitude: lat,
-                    longitude: lon,
-                  },
-                };
-                this.props.onGeocoding(androidCompatibleResult, json);
-              }
-            }
-          })
-          .catch( error => consle.warn('Yandex geocoding api error: ' + error));
-      },
-      150
-    );
-  }
 
   onGeocodingEventInternal = (event) => {
     if (this.props.onGeocoding){

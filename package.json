@@ -1,6 +1,6 @@
 {
   "name": "react-native-yandexmapkit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "React Native wrapper for Yandex Map Kit iOS and Android",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/doomsower/react-native-yandexmapkit#readme",
   "peerDependencies": {
-    "react-native": "^0.32.0"
+    "react-native": ">=0.32.0"
   },
   "dependencies": {
     "lodash": "^4.15.0",

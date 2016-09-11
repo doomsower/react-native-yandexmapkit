@@ -1,8 +1,5 @@
-
-import { NativeModules } from 'react-native';
 import YandexMapView from './src/YandexMapView';
-
-const YandexMapKit = NativeModules.RNYandexMapKit;
+import YandexMapKit from './src/YandexMapKit';
 
 module.exports = {
   YandexMapView,
