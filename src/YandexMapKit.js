@@ -19,7 +19,7 @@ function makeDebouncedGeocoding(options, onComplete, apiKey, debounceWait = 150)
     requestGeocoding(geocode, options, apiKey)
       .then(json => {
         if (json.error) {
-          consle.warn('Yandex geocoding api error: ' + json.error);
+          console.warn('Yandex geocoding api error: ' + json.error);
         }
         else if (onComplete) {
           //Provide full web geocoding response as second argument
@@ -45,7 +45,7 @@ function makeDebouncedGeocoding(options, onComplete, apiKey, debounceWait = 150)
           onComplete(androidCompatibleResult, json);
         }
       })
-      .catch(error => consle.warn('Yandex geocoding api error: ' + error));
+      .catch(error => console.warn('Yandex geocoding api error: ' + error));
   };
   if (options.hasOwnProperty('sco') || options.hasOwnProperty('kind')){
     return debounce((latitude, longitude) => apiCall(`${latitude},${longitude}`), debounceWait);
