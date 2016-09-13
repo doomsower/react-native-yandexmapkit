@@ -10,6 +10,20 @@ import {
   TouchableOpacity } from 'react-native'; 
 import {makeDebouncedGeocoding} from './YandexMapKit';
 
+const AndroidMapEvent = {
+  EMPTY: 0,
+  SCROLL_BEGIN: 1,
+  SCROLL_MOVE: 2,
+  SCROLL_END: 3,
+  ZOOM_BEGIN: 4,
+  ZOOM_MOVE: 5,
+  ZOOM_END: 6,
+  SCALE_BEGIN: 7,
+  SCALE_MOVE: 8,
+  SCALE_END: 9,
+  LONG_PRESS: 10,
+};
+
 class YandexMapView extends Component {
 
   static propTypes = {
@@ -151,11 +165,17 @@ class YandexMapView extends Component {
     
     //Handle geocoding
     const {geocodingEnabled, disableAndroidGeocoding} = this.props;
-    if (geocodingEnabled && (Platform.OS === 'ios' || disableAndroidGeocoding)){
+    if (
+      geocodingEnabled && 
+      (Platform.OS === 'ios' || disableAndroidGeocoding) &&
+      (type === undefined || type === AndroidMapEvent.SCALE_END || type === AndroidMapEvent.SCROLL_END || type === AndroidMapEvent.ZOOM_END)
+    )
+    {
       this._debouncedGeocoding(latitude, longitude);
     }
   };
 
+  //Native android-only event
   onGeocodingEventInternal = (event) => {
     if (this.props.onGeocoding){
       this.props.onGeocoding(event.nativeEvent);

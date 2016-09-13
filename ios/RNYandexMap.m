@@ -95,7 +95,6 @@
           @"longitude": @(region.center.longitude),
           @"latitudeDelta": @(region.span.latitudeDelta),
           @"longitudeDelta": @(region.span.longitudeDelta),
-          @"type": @"type is available on Android only",
       };
     _onMapEvent(event);
   }
