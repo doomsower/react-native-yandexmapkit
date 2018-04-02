@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "7.0"
 
   s.dependency 'React'
-  s.dependency 'YandexMapKit'
+  s.dependency 'YandexMapKit', '~> 1.0.9'
 end
